@@ -53,6 +53,7 @@
             overflow-x: hidden;
         }
 
+        /* Canvas Particle Canvas */
         #snow-canvas {
             position: fixed;
             top: 0;
@@ -64,6 +65,7 @@
             transition: opacity 0.5s ease;
         }
 
+        /* Glassmorphism Styles */
         .glass-card {
             background: rgba(8, 23, 44, 0.85);
             backdrop-filter: blur(16px);
@@ -79,6 +81,7 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
         }
 
+        /* Glow buttons */
         .btn-glow-cold {
             background: linear-gradient(135deg, #0052cc 0%, #00d2ff 100%);
             box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
@@ -95,6 +98,7 @@
             transform: scale(0.97);
         }
 
+        /* Wild West Parchment Styles */
         .parchment-bg {
             background: #d4b886;
             background-image: radial-gradient(#c29f64 1px, transparent 0);
@@ -114,6 +118,7 @@
             box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
         }
 
+        /* Apple Fortune Wood Tiles */
         .wood-circle-tile {
             background: radial-gradient(circle, #8d562b 0%, #4a2810 100%);
             border: 3px solid #6b3e1b;
@@ -126,6 +131,7 @@
             box-shadow: inset 0 0 10px #ffe699, 0 0 15px rgba(255, 180, 50, 0.8);
         }
 
+        /* Shimmer animations */
         .ice-shimmer {
             position: relative;
             overflow: hidden;
@@ -156,6 +162,7 @@
             100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
         }
 
+        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 4px;
         }
@@ -170,8 +177,10 @@
 </head>
 <body class="cold-theme transition-colors duration-500 min-h-screen flex flex-col justify-between max-w-md mx-auto relative border-x border-white/5">
 
+    <!-- SNOW PARTICLES CANVAS (COLDBET BLIZZARD MODE) -->
     <canvas id="snow-canvas"></canvas>
 
+    <!-- NOTIFICATION TOAST -->
     <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none w-11/12 max-w-xs">
         <div class="glass-card px-4 py-3 rounded-2xl flex items-center gap-3 border border-cyan-500/50 shadow-2xl">
             <i id="toast-icon" class="fas fa-circle-check text-cyan-400 text-xl"></i>
@@ -179,7 +188,10 @@
         </div>
     </div>
 
+    <!-- MAIN CONTAINER -->
     <div class="w-full flex-grow flex flex-col p-4 pb-24 z-10">
+
+        <!-- HEADER STATUS BAR -->
         <header class="flex items-center justify-between mb-4 glass-card p-3 rounded-2xl">
             <div class="flex items-center gap-2.5">
                 <div id="brand-icon-box" class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 font-bold shadow-lg shadow-cyan-500/20">
@@ -204,7 +216,9 @@
             </div>
         </header>
 
+        <!-- VIEW 1: AUTHENTICATION & PLATFORM SELECTION -->
         <section id="view-auth" class="flex-grow flex flex-col justify-center space-y-4 my-auto">
+            
             <div class="text-center space-y-2">
                 <div class="inline-block p-4 rounded-3xl bg-cyan-500/10 border border-cyan-500/30 mb-1 ice-shimmer">
                     <i id="auth-main-logo" class="fas fa-snowflake text-4xl text-cyan-400"></i>
@@ -215,6 +229,7 @@
                 <p class="text-xs text-gray-400 max-w-xs mx-auto">Platformani tanlang va akuntingizni faollashtiring</p>
             </div>
 
+            <!-- Platform Selector Switch -->
             <div class="grid grid-cols-2 gap-3 glass-card p-1.5 rounded-2xl">
                 <button id="btn-select-coldbet" onclick="selectPlatform('coldbet')" class="py-3 px-4 rounded-xl font-extrabold text-xs transition-all flex items-center justify-center gap-2 border bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-lg shadow-cyan-500/20">
                     <i class="fas fa-snowflake"></i> COLDBET
@@ -224,6 +239,7 @@
                 </button>
             </div>
 
+            <!-- Activation Instructions Banner (Translated Arabic Content) -->
             <div id="activation-instruction-box" class="glass-card p-4 rounded-2xl space-y-2 border-cyan-500/30">
                 <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs">
                     <i class="fas fa-bullhorn text-sm"></i>
@@ -234,6 +250,7 @@
                 </p>
             </div>
 
+            <!-- Auth Input Form -->
             <div class="glass-card p-5 rounded-2xl space-y-3.5">
                 <div class="space-y-1">
                     <label class="text-[11px] font-bold text-gray-300 flex items-center justify-between">
@@ -267,7 +284,10 @@
             </div>
         </section>
 
+        <!-- VIEW 2: MAIN GAMES DASHBOARD -->
         <section id="view-dashboard" class="hidden flex-grow flex-col space-y-4">
+            
+            <!-- PROMO CODE DISPLAY CARD -->
             <div id="promo-banner-card" class="glass-card p-3.5 rounded-2xl flex items-center justify-between border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-transparent to-transparent">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
@@ -289,7 +309,10 @@
                 <span class="text-[11px] text-cyan-400 font-semibold"><i class="fas fa-shield text-[10px]"></i> VIP Signal 4.0</span>
             </div>
 
+            <!-- 7 GAMES GRID -->
             <div class="grid grid-cols-2 gap-3">
+                
+                <!-- Game 1: Apple of Fortune -->
                 <button onclick="openGame('apple')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         🍎
@@ -298,6 +321,7 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">O'rmon olmasi</span>
                 </button>
 
+                <!-- Game 2: Thimbles -->
                 <button onclick="openGame('thimbles')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         🔔
@@ -306,6 +330,7 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">Shar topish</span>
                 </button>
 
+                <!-- Game 3: Mines -->
                 <button onclick="openGame('mines')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-cyan-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         💎
@@ -314,6 +339,7 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">Minalar algoritmi</span>
                 </button>
 
+                <!-- Game 4: Wild West Gold -->
                 <button onclick="openGame('wildwest')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         🤠
@@ -322,6 +348,7 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">2x / 3x Rejim</span>
                 </button>
 
+                <!-- Game 5: Kamikaze -->
                 <button onclick="openGame('kamikaze')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         ✈️
@@ -330,6 +357,7 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">Samolyot yo'li</span>
                 </button>
 
+                <!-- Game 6: Swamp Land -->
                 <button onclick="openGame('swampland')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
                     <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
                         🐸
@@ -338,21 +366,5 @@
                     <span class="text-[10px] text-gray-400 font-medium mt-0.5">Qurbaqa sakrashi</span>
                 </button>
 
-                <button onclick="openGame('aviator')" class="col-span-2 glass-card p-4 rounded-2xl flex items-center justify-between hover:border-cyan-400/50 transition-all active:scale-98 group bg-gradient-to-r from-red-950/30 via-black to-slate-900 border-red-500/30">
-                    <div class="flex items-center gap-3.5">
-                        <div class="w-12 h-12 rounded-xl bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-500 text-2xl group-hover:scale-110 transition-transform">
-                            🚀
-                        </div>
-                        <div class="text-left">
-                            <div class="font-extrabold text-sm tracking-wide text-red-400">AVIATOR Predictor</div>
-                            <div class="text-[11px] text-gray-400">Sun'iy intellekt tahlili asosida Aviator signalini oling</div>
-                        </div>
-                    </div>
-                    <i class="fas fa-chevron-right text-gray-500 group-hover:text-cyan-400 transition-colors"></i>
-                </button>
-            </div>
-        </section>
-
-        <section id="view-game" class="hidden flex-grow flex-col space-y-4">
-            <div class="flex items-center justify-between">
-                <button onclick="closeGame()" class="px-3 py-2 rounded-xl bg-white/5 border b
+                <!-- Game 7: Aviator Predictor -->
+                <button onclick="openGame('aviator')" class="col-span-2 glass-card p-4 rounded-2xl flex items-center justify-between hover:border-cyan-400/50 transition-all active:scale-98 group bg-gradient-to-r from-red-950/30 via-black to-sla
