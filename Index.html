@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>COLDBEHACK VIP</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cold: {
+                            bg: '#040d1a',
+                            card: '#08172c',
+                            accent: '#00d2ff',
+                            border: '#1e3a8a',
+                            glow: 'rgba(0, 210, 255, 0.4)'
+                        },
+                        line: {
+                            bg: '#04160d',
+                            card: '#082619',
+                            accent: '#00e676',
+                            border: '#1b5e20',
+                            glow: 'rgba(0, 230, 118, 0.4)'
+                        }
+                    },
+                    fontFamily: {
+                        outfit: ['Outfit', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #040d1a;
+            color: #ffffff;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            overflow-x: hidden;
+        }
+
+        /* Canvas Particle Canvas */
+        #snow-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        /* Glassmorphism Styles */
+        .glass-card {
+            background: rgba(8, 23, 44, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        .line-theme .glass-card {
+            background: rgba(8, 38, 25, 0.85);
+            border-color: rgba(0, 230, 118, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+        }
+
+        /* Glow buttons */
+        .btn-glow-cold {
+            background: linear-gradient(135deg, #0052cc 0%, #00d2ff 100%);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+        }
+        .btn-glow-cold:active {
+            transform: scale(0.97);
+        }
+
+        .btn-glow-line {
+            background: linear-gradient(135deg, #008037 0%, #00e676 100%);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+        }
+        .btn-glow-line:active {
+            transform: scale(0.97);
+        }
+
+        /* Wild West Parchment Styles */
+        .parchment-bg {
+            background: #d4b886;
+            background-image: radial-gradient(#c29f64 1px, transparent 0);
+            background-size: 16px 16px;
+            box-shadow: inset 0 0 30px rgba(80, 50, 10, 0.5);
+        }
+
+        .parchment-cell {
+            background: linear-gradient(180deg, #ebd6b0 0%, #c8a773 100%);
+            border: 1px solid #9e7945;
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.3), 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .wood-bottom-bar {
+            background: linear-gradient(180deg, #a66a38 0%, #633918 100%);
+            border-top: 2px solid #d49553;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Apple Fortune Wood Tiles */
+        .wood-circle-tile {
+            background: radial-gradient(circle, #8d562b 0%, #4a2810 100%);
+            border: 3px solid #6b3e1b;
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.2), inset 0 -4px 8px rgba(0,0,0,0.6), 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .wood-circle-active {
+            background: radial-gradient(circle, #d98836 0%, #874917 100%);
+            border: 3px solid #ffbc52;
+            box-shadow: inset 0 0 10px #ffe699, 0 0 15px rgba(255, 180, 50, 0.8);
+        }
+
+        /* Shimmer animations */
+        .ice-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        .ice-shimmer::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(60deg, transparent 30%, rgba(255,255,255,0.15) 50%, transparent 70%);
+            transform: rotate(30deg);
+            animation: shimmer 3.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+
+        .pulse-live {
+            animation: pulse-ring 2s infinite;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(0, 230, 118, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 230, 118, 0); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0,210,255,0.3);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="cold-theme transition-colors duration-500 min-h-screen flex flex-col justify-between max-w-md mx-auto relative border-x border-white/5">
+
+    <!-- SNOW PARTICLES CANVAS (COLDBET BLIZZARD MODE) -->
+    <canvas id="snow-canvas"></canvas>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 transform -translate-y-24 opacity-0 transition-all duration-300 pointer-events-none w-11/12 max-w-xs">
+        <div class="glass-card px-4 py-3 rounded-2xl flex items-center gap-3 border border-cyan-500/50 shadow-2xl">
+            <i id="toast-icon" class="fas fa-circle-check text-cyan-400 text-xl"></i>
+            <span id="toast-msg" class="text-xs font-bold tracking-wide">Xabar</span>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="w-full flex-grow flex flex-col p-4 pb-24 z-10">
+
+        <!-- HEADER STATUS BAR -->
+        <header class="flex items-center justify-between mb-4 glass-card p-3 rounded-2xl">
+            <div class="flex items-center gap-2.5">
+                <div id="brand-icon-box" class="w-9 h-9 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 font-bold shadow-lg shadow-cyan-500/20">
+                    <i id="brand-icon" class="fas fa-snowflake text-base"></i>
+                </div>
+                <div>
+                    <h1 class="text-xs text-gray-400 font-extrabold uppercase tracking-wider">COLDBEHACK VIP</h1>
+                    <div class="flex items-center gap-1.5 text-xs font-bold text-emerald-400">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span>
+                        <span id="platform-status-text">COLDBET VIP</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <div class="bg-black/50 px-3 py-1 rounded-xl border border-white/10 text-[11px] font-mono text-cyan-300 flex items-center gap-1">
+                    <i class="fas fa-shield-halved text-emerald-400"></i>
+                    <span>95% Faol</span>
+                </div>
+                <button id="logout-btn" onclick="logout()" class="hidden w-8 h-8 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 flex items-center justify-center hover:bg-red-500/20 transition-all">
+                    <i class="fas fa-right-from-bracket text-xs"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- VIEW 1: AUTHENTICATION & PLATFORM SELECTION -->
+        <section id="view-auth" class="flex-grow flex flex-col justify-center space-y-4 my-auto">
+            
+            <div class="text-center space-y-2">
+                <div class="inline-block p-4 rounded-3xl bg-cyan-500/10 border border-cyan-500/30 mb-1 ice-shimmer">
+                    <i id="auth-main-logo" class="fas fa-snowflake text-4xl text-cyan-400"></i>
+                </div>
+                <h2 id="app-title-header" class="text-2xl font-black tracking-wider uppercase text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-200 to-indigo-400">
+                    COLDBEHACK VIP
+                </h2>
+                <p class="text-xs text-gray-400 max-w-xs mx-auto">Platformani tanlang va akuntingizni faollashtiring</p>
+            </div>
+
+            <!-- Platform Selector Switch -->
+            <div class="grid grid-cols-2 gap-3 glass-card p-1.5 rounded-2xl">
+                <button id="btn-select-coldbet" onclick="selectPlatform('coldbet')" class="py-3 px-4 rounded-xl font-extrabold text-xs transition-all flex items-center justify-center gap-2 border bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-lg shadow-cyan-500/20">
+                    <i class="fas fa-snowflake"></i> COLDBET
+                </button>
+                <button id="btn-select-linebet" onclick="selectPlatform('linebet')" class="py-3 px-4 rounded-xl font-extrabold text-xs transition-all flex items-center justify-center gap-2 border border-transparent text-gray-400 hover:text-white">
+                    <i class="fas fa-bolt"></i> LINEBET
+                </button>
+            </div>
+
+            <!-- Activation Instructions Banner (Translated Arabic Content) -->
+            <div id="activation-instruction-box" class="glass-card p-4 rounded-2xl space-y-2 border-cyan-500/30">
+                <div class="flex items-center gap-2 text-cyan-400 font-bold text-xs">
+                    <i class="fas fa-bullhorn text-sm"></i>
+                    <span>TIZIMNI FAOLLASHTIRISH</span>
+                </div>
+                <p id="instruction-text" class="text-xs text-gray-300 leading-relaxed">
+                    Coldbet ilovasini yuklab olib, <strong class="text-cyan-400 font-extrabold">MUZZ</strong> promokodi orqali yangi account oching va hisobingizni kamida 60.000 so'mga to'ldiring.<br><br>Shunda <strong>COLDBETHACK</strong> algoritmi 100% aniq ishlaydi!
+                </p>
+            </div>
+
+            <!-- Auth Input Form -->
+            <div class="glass-card p-5 rounded-2xl space-y-3.5">
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-300 flex items-center justify-between">
+                        <span>HISOB ID RAQAMI (أدخل ID الحساب)</span>
+                        <span class="text-[10px] text-gray-500">Account ID</span>
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-user-tag absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                        <input type="number" id="input-id" placeholder="ID raqamingizni kiriting" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-9 pr-3 text-xs font-mono text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 transition-colors">
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-gray-300 flex items-center justify-between">
+                        <span>KALIT KODI (أدخل مفتاح التفعيل)</span>
+                        <span id="key-hint" class="text-[10px] text-cyan-400 font-mono">MUZZ</span>
+                    </label>
+                    <div class="relative">
+                        <i class="fas fa-key absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+                        <input type="text" id="input-key" placeholder="Kalitni kiriting" class="w-full bg-black/50 border border-white/10 rounded-xl py-3 pl-9 pr-3 text-xs font-mono text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400 transition-colors uppercase">
+                    </div>
+                </div>
+
+                <div id="auth-error" class="hidden text-xs text-red-400 font-semibold text-center bg-red-500/10 py-2 rounded-xl border border-red-500/20">
+                    <i class="fas fa-triangle-exclamation mr-1"></i> Hisob ID yoki Kalit noto'g'ri!
+                </div>
+
+                <button onclick="loginAuth()" id="btn-login-submit" class="w-full py-3.5 rounded-xl font-black text-xs tracking-wider text-black btn-glow-cold transition-all active:scale-95 flex items-center justify-center gap-2 uppercase">
+                    <i class="fas fa-shield-halved"></i> XAVFSIZ RO'YXATDAN O'TISH VA KIRISH
+                </button>
+            </div>
+        </section>
+
+        <!-- VIEW 2: MAIN GAMES DASHBOARD -->
+        <section id="view-dashboard" class="hidden flex-grow flex-col space-y-4">
+            
+            <!-- PROMO CODE DISPLAY CARD -->
+            <div id="promo-banner-card" class="glass-card p-3.5 rounded-2xl flex items-center justify-between border-amber-500/30 bg-gradient-to-r from-amber-500/10 via-transparent to-transparent">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                        <i class="fas fa-bolt text-lg"></i>
+                    </div>
+                    <div>
+                        <div class="text-[10px] text-amber-300/80 font-bold uppercase tracking-wider">FAOL PROMOKOD</div>
+                        <div id="promo-code-text" class="text-xl font-black text-white tracking-widest font-mono">MUZZ</div>
+                    </div>
+                </div>
+                <button onclick="copyPromo()" class="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 font-bold text-xs hover:bg-amber-500/30 active:scale-95 transition-all flex items-center gap-1.5">
+                    <i class="fas fa-copy"></i>
+                    <span>Copya</span>
+                </button>
+            </div>
+
+            <div class="flex items-center justify-between px-1">
+                <h3 class="text-xs font-extrabold text-gray-400 uppercase tracking-widest">O'YINLAR ALGORITMI (7 TA)</h3>
+                <span class="text-[11px] text-cyan-400 font-semibold"><i class="fas fa-shield text-[10px]"></i> VIP Signal 4.0</span>
+            </div>
+
+            <!-- 7 GAMES GRID -->
+            <div class="grid grid-cols-2 gap-3">
+                
+                <!-- Game 1: Apple of Fortune -->
+                <button onclick="openGame('apple')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-red-500/10 border border-red-500/20 flex items-center justify-center text-red-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        🍎
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Apple of Fortune</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">O'rmon olmasi</span>
+                </button>
+
+                <!-- Game 2: Thimbles -->
+                <button onclick="openGame('thimbles')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        🔔
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Thimbles</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">Shar topish</span>
+                </button>
+
+                <!-- Game 3: Mines -->
+                <button onclick="openGame('mines')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-cyan-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        💎
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Mines 💎</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">Minalar algoritmi</span>
+                </button>
+
+                <!-- Game 4: Wild West Gold -->
+                <button onclick="openGame('wildwest')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        🤠
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Wild West Gold</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">2x / 3x Rejim</span>
+                </button>
+
+                <!-- Game 5: Kamikaze -->
+                <button onclick="openGame('kamikaze')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/20 flex items-center justify-center text-sky-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        ✈️
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Kamikaze</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">Samolyot yo'li</span>
+                </button>
+
+                <!-- Game 6: Swamp Land -->
+                <button onclick="openGame('swampland')" class="glass-card p-4 rounded-2xl flex flex-col items-center justify-center text-center hover:border-cyan-400/50 transition-all active:scale-95 group relative overflow-hidden">
+                    <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 text-3xl mb-2 group-hover:scale-110 transition-transform">
+                        🐸
+                    </div>
+                    <span class="font-extrabold text-xs tracking-wide">Swamp Land</span>
+                    <span class="text-[10px] text-gray-400 font-medium mt-0.5">Qurbaqa sakrashi</span>
+                </button>
+
+                <!-- Game 7: Aviator Predictor -->
+                <button onclick="openGame('aviator')" class="col-span-2 glass-card p-4 rounded-2xl flex items-center justify-between hover:border-cyan-400/50 transition-all active:scale-98 group bg-gradient-to-r from-red-950/30 via-black/40 to-
